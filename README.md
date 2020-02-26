@@ -6,7 +6,7 @@ This application is not a Kafka Connect application. It is a simple JDBC applica
 
 ### Populate the configuration file
 
-Change the property values to use you own database.
+Change the property values in **config.properties** to use your own database.
 
 ```properties
 bootstrap-servers=localhost:9092
