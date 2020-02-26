@@ -1,6 +1,6 @@
 # Non-connector based jdbc source client to Kafka
 
-This application is not a Kafka Connect application. It is a simple JDBC application that converts a result set to JSON and publishes it to Kakfa. It will try to perform CDC by checking the latest update timestamp for the entire table. It will persist that timestamp for the next query defined by **waite** in the configuration. This will only read 1 table. It will use the primary key you provide in the configuration file as the key in Kafka. This application only supports tables with a single primary key but can be modified to build a composite key from multiple columns. This implementation also does not support complex data types.
+This application is not a Kafka Connect application. It is a simple JDBC application that converts a result set to JSON and publishes it to Kakfa. It will try to perform CDC by checking the latest update timestamp for the entire table. It will persist that timestamp for the next query defined by **wait** in the configuration. If the application is restarted, it will resume from the checkpoint (timestamp persisted in a file called **lastupdate.txt**). Look for this file when the application is running. This will only read 1 table. It will use the primary key you provide in the configuration file as the key in Kafka. This application only supports tables with a single primary key but can be modified to build a composite key from multiple columns. This implementation also does not support complex data types.
 
 ## Getting Started
 
@@ -27,4 +27,5 @@ primary_key=id
 ```bash
 mvn package
 mvn exec:java -Dexec.mainClass="com.github.hdulay.App"
+kafka-console-consumer --bootstrap-server localhost:9092 --topic mysql-customers
 ```
