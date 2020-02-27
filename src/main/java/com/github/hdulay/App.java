@@ -76,11 +76,6 @@ public class App
             }
         };
         timer.schedule(task, 0, wait);
-
-        /*
-        select * from foo where last_update >= ?
-         */
-
     }
 
     private Timestamp send(KafkaProducer producer, ResultSet rs, String topic, String primary_key, String update_col) throws SQLException, JsonProcessingException {
@@ -105,7 +100,19 @@ public class App
             }
             Timestamp update = rs.getTimestamp(update_col);
             lastUpdate = lastUpdate == null ? update : lastUpdate.before(update) ? update : lastUpdate;
-            String key = rs.getString(primary_key);
+            String key = Arrays.asList(primary_key.split(","))
+                    .stream()
+                    .map(k -> {
+                        try {
+                            return rs.getString(k);
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                            log.error(e.getMessage(), e);
+                            return "?";
+                        }
+                    })
+                    .reduce((first, second) -> first+"-"+second)
+                    .get();
 
             String json = objectMapper.writeValueAsString(map);
             ProducerRecord record = new ProducerRecord(topic, key, json);
