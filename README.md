@@ -25,7 +25,13 @@ primary_key=id
 ### Execute the maven commands
 
 ```bash
+# install the JDBC driver. Copy your drive into the drivers directory and 
+# replace this.is.my.driver.jar with that name.
+mvn install:install-file -Dfile=drivers/this.is.my.driver.jar -DgroupId=jdbc.source.kafka -DartifactId=not.a.connector -Dversion=1 -Dpackaging=jar
+# build the project
 mvn package
+# run the application
 mvn exec:java -Dexec.mainClass="com.github.hdulay.App"
-kafka-console-consumer --bootstrap-server localhost:9092 --topic mysql-customers
+# consume the data. replace mytopic with the topic to which you're writing
+kafka-console-consumer --bootstrap-server localhost:9092 --topic mytopic
 ```
