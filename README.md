@@ -25,7 +25,7 @@ primary_key=id
 ### Execute the maven commands
 
 ```bash
-# install the JDBC driver. Copy your drive into the drivers directory and 
+# install the JDBC driver. Copy your driver into the drivers directory and 
 # replace this.is.my.driver.jar with that name.
 mvn install:install-file -Dfile=drivers/this.is.my.driver.jar -DgroupId=jdbc.source.kafka -DartifactId=not.a.connector -Dversion=1 -Dpackaging=jar
 # build the project
