@@ -8,9 +8,7 @@ In order for the offset handling to work, the SQL provided in the
 
 ## Getting Started
 
-### Populate the configuration file
-
-Change the property values in **config.properties** to use your own database.
+### Create a config.properties file in the local directory
 
 ```properties
 bootstrap-servers=localhost:9092
@@ -19,11 +17,10 @@ url=jdbc:mysql://localhost:3306/demo
 driver=org.gjt.mm.mysql.Driver
 user=connect_user
 password=asgard
-sql=select * from customers where UPDATE_TS > ? and id > ? order by UPDATE_TS, id
+sql=select * from customers where UPDATE_TS > ? and id > ? order by UPDATE_TS
 wait=10000
 update_col=UPDATE_TS
 primary_key=id
-
 ```
 
 ### Create a confluent.properties file in the local directory
