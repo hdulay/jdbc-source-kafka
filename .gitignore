@@ -29,3 +29,6 @@ lastupdate.txt
 .project
 *.jar
 *.properties
+ojdbc10-full
+errors.txt
+OJDBC*

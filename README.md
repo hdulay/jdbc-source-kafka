@@ -54,7 +54,31 @@ mvn package
 # run the application
 mvn exec:java -Dexec.mainClass="com.github.hdulay.App"
 # consume the data. replace mytopic with the topic to which you're writing
+## for confluent platform
 kafka-console-consumer --bootstrap-server localhost:9092 --topic mytopic --property print.key=true --property key.separator=":"
+## for confluent cloud ( make sure you'ved logged in )
+ccloud kafka topic consume mytopic
+```
+
+## ORACLE
+
+Run sqlplus to connect to database
+
+```bash
+docker run -v ${PWD}:/tmp -e URL=${USERNAME}/${PASSWORD}@//${HOSTNAME}:1521/DATABASE -ti sflyr/sqlplus
+```
+
+```sql
+CREATE TABLE test (
+    id NUMBER,
+    first_name VARCHAR2(50) NOT NULL,
+    info VARCHAR2(50),
+    last_update TIMESTAMP,
+    PRIMARY KEY(id)
+);  
+set autocommit on
+insert into test values (1, 'hubert', 'test', CURRENT_TIMESTAMP);
+update test set info = 'updated value2', last_update = CURRENT_TIMESTAMP where id = 1;
 ```
 
 ## SQL SERVER ISSUE
