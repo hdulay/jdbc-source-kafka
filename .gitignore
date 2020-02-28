@@ -28,3 +28,4 @@ target
 lastupdate.txt
 .project
 *.jar
+*.properties

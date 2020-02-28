@@ -30,7 +30,6 @@ public class App
     Logger log = LoggerFactory.getLogger(App.class);
 
     public App(Properties props) throws IOException, ClassNotFoundException, SQLException {
-        String bootstrapServers = props.getProperty("bootstrap-servers");
         String topic = props.getProperty("topic");
         String url = props.getProperty("url");
         String driver = props.getProperty("driver");
@@ -42,8 +41,8 @@ public class App
         long wait = Long.parseLong(props.getProperty("wait"));
 
         Properties config = new Properties();
+        config.load(new FileReader("confluent.properties"));
         config.put("client.id", InetAddress.getLocalHost().getHostName());
-        config.put("bootstrap.servers", bootstrapServers);
         config.put("key.serializer", StringSerializer.class.getName());
         config.put("value.serializer", StringSerializer.class.getName());
         config.put("acks", "all");

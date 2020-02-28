@@ -26,6 +26,26 @@ primary_key=id
 
 ```
 
+### Create a confluent.properties file in the local directory
+
+For Confluent Cloud
+
+```properties
+ssl.endpoint.identification.algorithm=https
+sasl.mechanism=PLAIN
+request.timeout.ms=20000
+bootstrap.servers=CHANGE_ME.confluent.cloud:9092
+retry.backoff.ms=500
+sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username="KEY" password="SECRET";
+security.protocol=SASL_SSL
+```
+
+For Confluent Platform
+
+```properties
+bootstrap.servers=localhost:9092
+```
+
 ### Execute the maven commands
 
 ```bash
@@ -39,3 +59,15 @@ mvn exec:java -Dexec.mainClass="com.github.hdulay.App"
 # consume the data. replace mytopic with the topic to which you're writing
 kafka-console-consumer --bootstrap-server localhost:9092 --topic mytopic --property print.key=true --property key.separator=":"
 ```
+
+## SQL SERVER ISSUE
+
+https://docs.microsoft.com/en-us/sql/connect/jdbc/using-basic-data-types?view=sql-server-ver15
+
+The TIMESTAMP data type in sql server is mapped to BINARY data type in JDBC. datetime and datetime2 are mapped to TIMESTAMP in JDBC. This application does not set the prepared statement value to BINARY. datetime2 is more precise than datetime and will always return because it's greater than the offset.
+
+* Sql server TIMESTAMP -> JDBC BINARY
+* datetime2 is too percise and always returns in the results
+* datatime is an older datatype. it does not seem to respect greater than
+
+In order to make this successful, a custom SQL Server producer will need to be created that does not conform to JDBC.
