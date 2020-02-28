@@ -11,9 +11,7 @@ import org.apache.kafka.common.serialization.StringSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.net.InetAddress;
 import java.nio.charset.Charset;
 import java.sql.*;
@@ -55,17 +53,13 @@ public class App
                 try(Connection c = getConnection(driver, url, user, password)) {
                     log.info("got connection");
                     final File lastupdate = new File("lastupdate.txt");
-                    long last_update = lastupdate.exists() ?
-                            Long.parseLong(Files.readFirstLine(lastupdate, Charset.defaultCharset()))
-                            : -1;
-                    Timestamp ts = new Timestamp(last_update);
+                    Timestamp ts = load(lastupdate);
                     PreparedStatement ps = c.prepareStatement(sql);
                     ps.setTimestamp(1, ts);
                     ResultSet rs = ps.executeQuery();
                     Timestamp last = send(producer, rs, topic, primary_key, update_col);
                     if(last != null) {
-                        String lastUpdate = Long.toString(last.getTime());
-                        Files.write(lastUpdate.getBytes(), lastupdate);
+                        save(lastupdate, last);
                     }
 
                 } catch (Exception e) {
@@ -75,6 +69,22 @@ public class App
             }
         };
         timer.schedule(task, 0, wait);
+    }
+
+    private Timestamp load(File lastupdate) {
+        try(FileInputStream fis = new FileInputStream(lastupdate);
+            ObjectInputStream ois = new ObjectInputStream(fis);) {
+            return (Timestamp) ois.readObject();
+        } catch (Exception e) {
+            return new Timestamp(-1L);
+        }
+    }
+
+    private void save(File lastupdate, Timestamp last) throws IOException {
+        try(FileOutputStream fos = new FileOutputStream(lastupdate);
+            ObjectOutputStream oos = new ObjectOutputStream(fos);) {
+            oos.writeObject(last);
+        }
     }
 
     private Timestamp send(KafkaProducer producer, ResultSet rs, String topic, String primary_key, String update_col) throws SQLException, JsonProcessingException {
