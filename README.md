@@ -11,16 +11,15 @@ In order for the offset handling to work, the SQL provided in the
 ### Create a config.properties file in the local directory
 
 ```properties
-bootstrap-servers=localhost:9092
-topic=mysql-customers
-url=jdbc:mysql://localhost:3306/demo
-driver=org.gjt.mm.mysql.Driver
-user=connect_user
-password=asgard
-sql=select * from customers where UPDATE_TS > ? and id > ? order by UPDATE_TS
+topic=rds-oracle
+url=jdbc:oracle:thin:@//$HOSTNAME:1521/DATABASE
+driver=oracle.jdbc.driver.OracleDriver
+user=$USER
+password=$PASSWORD
+sql=select * from hubert.test where last_update > ? order by last_update
 wait=10000
-update_col=UPDATE_TS
-primary_key=id
+update_col=last_update
+primary_key=id,first_name
 ```
 
 ### Create a confluent.properties file in the local directory
