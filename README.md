@@ -4,7 +4,7 @@ This application is not a Kafka Connect application. It is a simple JDBC applica
 
 ## Offset handling
 
-In order for the offset handling to work, the SQL provided in the 
+Offset is saved in a file called lastupdate.txt. It's contents will be a serialized java.sql.Timestamp object to preserve the nanos value when comparing timestamps.
 
 ## Getting Started
 
